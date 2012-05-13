@@ -176,7 +176,7 @@ _safe_return = function (r) {
 }
 
 // used to convert arguments to an Array
-_array = function() { function slice(a) { return slice.call(a); }}();
+_array = function() { return function(a) { return Array.prototype.slice.call(a); }}();
 
 // created ability to use short tonation in methods like 
 //  $0.map({|v,i| return v+1}
