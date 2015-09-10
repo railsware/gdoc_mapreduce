@@ -23,7 +23,7 @@ function mr() {
 
   _.src = _block2function(_.$.pop());
   
-  _.$.map(function(a,b){if(autoTrim){a=trim(a)};return _['$'+b]=a});
+  _.$.map(function(a,b){if(autoTrim){a=a.trim()};return _['$'+b]=a});
 
   try {
     return _safe_return(eval('with(_){delete _;' + _.src + '}'));
@@ -31,11 +31,6 @@ function mr() {
     return e.message;
   }
 }
-
-/**
- * some useful array functions
- */
-function trim(a) { if(2==1){return a.length+" "+a[0].length}; while(a[0]==""){a.shift()};while(a[a.length-1]==""){a.pop()}; return a; }
 
 function concat() { 
   var args=_array(arguments);
@@ -178,9 +173,89 @@ _safe_return = function (r) {
 // used to convert arguments to an Array
 _array = function() { return function(a) { return Array.prototype.slice.call(a); }}();
 
+
+_is_array = function(o) { return Object.prototype.toString.call( o ) === '[object Array]' }
+
 // created ability to use short tonation in methods like 
 //  $0.map({|v,i| return v+1}
 //  vs.
 //  $0.map(function(v,i){return v+1}
 // also makes it easier to read
 _block2function = function(s) { return s.replace(/\{[ \t\n]*\|([^\|]+)\|/g, "function($1){") }
+
+// Array vertical function go through Array prototype
+
+Array.prototype.first = function(){ return this.length==0 ? null : this[0] }
+Array.prototype.last = function(){ return this.length==0 ? null : this[this.length-1] }
+
+Array.prototype.twodim = function(){
+  if ( !_is_array(this[0]) ) {
+    inner=this.slice();
+    this.length=1;
+    this[0]=inner
+  }  
+}
+
+Array.prototype.transpose = function(){
+  var tmp=[];
+  array=this;
+  array.twodim();
+
+  // the array is Y*X - [[1,2]] - first dimention is Y, second is x
+  var ny=tnx=array.length;
+  var nx=tny=array[0].length;
+
+  if(nx==0) {
+    return array;
+  }
+  
+  max=Math.max(ny,nx)
+  for(var y=0; y<max; y++) {
+    // var line=tmp[y]=[];
+    // line.length=ny;
+    for(var x=y+1; x<max; x++) {
+      var tx=y, ty=x;
+      t=array[ty] && array[ty][tx];
+
+      array[ty]=array[ty]||[]
+      array[ty][tx]=array[y][x];
+
+      array[y][x]=t;
+    }
+    array[y].length = tnx;
+  }
+  array.length = tny;
+  
+  return array;
+}
+
+// a function that will remove all elements of a 
+//  one dimentional array - if it's elements are empty (undefined or "")
+//  two dimentional array - if each element of the sub array is emtpy
+Array.prototype.trim = function(){
+  var onedim = !_is_array(this[0])
+  var nx = !onedim && this[0].length;
+
+  var isEmpty = function(v){ return v === undefined || v == "" }
+
+  do {
+    var firstEmpty=true, lastEmpty=true;
+    var first=this.first(),last=this.last();
+
+    // check all sublements under fist and last element
+    // if onedim - just check first nad last itself
+    if ( onedim ) { firstEmpty=isEmpty(first); lastEmpty=isEmpty(last); } 
+    else {
+      for(var x=0; x<nx; x++) {        
+        firstEmpty = firstEmpty && isEmpty( first[x] );
+        lastEmpty = lastEmpty && isEmpty( last[x] );
+        if( !firstEmpty && !lastEmpty ) { break; }
+      }
+    }
+
+    if(firstEmpty) { this.shift(); }
+    if(lastEmpty) { this.pop(); }
+  } while (this.length>0 && (firstEmpty || lastEmpty));
+  
+  return this;
+}
