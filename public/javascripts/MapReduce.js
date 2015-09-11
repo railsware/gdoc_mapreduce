@@ -23,7 +23,7 @@ function mr() {
 
   _.src = _block2function(_.$.pop());
   
-  _.$.map(function(a,b){if(autoTrim){a=a.trim()};return _['$'+b]=a});
+  _.$.map(function(argument, index){if(autoTrim){argument=argument.trim()};return _['$'+(index+1)]=argument});
 
   try {
     return _safe_return(eval('with(_){delete _;' + _.src + '}'));
@@ -38,16 +38,21 @@ function concat() {
   return args.reduce(function(r, v){return r.concat(v)},[]);
 } // combine multiple arrays
 
-function leftjoin(keysLeft, keysRight, valuesRight){
-  valuesRight = valuesRight || keysRight;
+function leftjoin(keysLeft, keysRight, valuesRight, defaultValues){
+  var _ = {$: _array(arguments)};
+
+  valuesRight = valuesRight || keysRight;
   if ( keysRight.length != valuesRight.length ) {
     return "keysRight and valuesRight - cannot be different length. Is auto-trim breaking something?";
   }
 
   // crate r=hash index for each key=k and int's position=p
-  var index = keysRight.reduce(function(r,k,p){r[v]=p;return r},[]); 
+  var value_map = keysRight.reduce(function(r, key, index){r[key]=index;return r},[]); 
   // for each keyLeft - find keyRight position and use valueRight value at such position
-  return keysLeft.map(function(v,i){return valuesRight[index[v]]})
+
+  return keysLeft.map(function(value, index){
+    return (value_map[value] == undefined) ? (defaultValues && defaultValues[index]) : valuesRight[value_map[value]] 
+  })
 }
 
 
