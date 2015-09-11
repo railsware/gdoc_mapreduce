@@ -8,7 +8,7 @@ describe("MapReduce", function() {
   describe("while map&reducing", function(){
 
     it("should be possible to access first param at $0, second at $1", function(){
-      expect(mr([1,2],[3,4],"$0+$1")).toEqual("1,23,4");
+      expect(mr([1,2],[3,4],"$1+$2")).toEqual("1,23,4");
     });
 
     it("should be possible to access first all params at $", function(){
@@ -16,11 +16,11 @@ describe("MapReduce", function() {
     });
 
     it("should be possible to use a short form of the js function as ruby block", function(){
-      expect(mr([1,2],"$0.map({|a| return a+1})")).toEqual([2,3]);
+      expect(mr([1,2],"$1.map({|a| return a+1})")).toEqual([2,3]);
     });
 
     it("should trim all incomming paramters", function(){
-      expect(mr([1,2,""],["",3,4,""],"$0+$1", "trim")).toEqual("1,23,4");
+      expect(mr([1,2,""],["",3,4,""],"$1+$2", "trim")).toEqual("1,23,4");
     });
 
     it("should make a safe return", function(){
@@ -31,11 +31,11 @@ describe("MapReduce", function() {
       var did_get_toast=false;
       SpreadsheetApp.getActiveSpreadsheet().toast=function(message, title, seconds){did_get_toast=title=="Wrong concat/leftjoin ?"}
 
-      mr([1,2,3,4,5,6,7,8,9],"$0.concat($0)", "trim")
+      mr([1,2,3,4,5,6,7,8,9],"$1.concat($1)", "trim");
       expect(did_get_toast).toEqual(true);
     });
     
-  })
+  });
 
   describe("while concatting", function() {
     
@@ -216,7 +216,7 @@ describe("Array", function() {
     it("should shift vertical (a single column two dimentional array)", function(){
       var a=[ [1],[2],[3] ];
       var a1=vshift(a);
-    
+
       expect(a1).toEqual([[1],[2],[3]]);
       expect(a).toEqual([]);
     });

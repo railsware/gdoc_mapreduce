@@ -1,0 +1,24 @@
+{
+  "name": "gdoc_mapreduce",
+  "version": "1.0.0",
+  "description": "A collection of functions to use in Google Spreadsheets",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/railsware/gdoc_mapreduce.git"
+  },
+  "author": "Yaroslav Lazor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/railsware/gdoc_mapreduce/issues"
+  },
+  "homepage": "https://github.com/railsware/gdoc_mapreduce",
+  "devDependencies": {
+    "jasmine": "^2.3.2",
+    "node-google-apps-script": "^0.1.5"
+  },
+  "scripts": {
+    "download": "gaps download 1MDoFYBg5uaHyZ__bPYriAQ3_8-aZD2WC8fWAyAijIGZLp9ToFNRnlK8u",
+    "upload": "(cd MapReduce && gaps upload && osascript -e 'display notification \"The latest version has been deployed\" with title \"MapReduce\"')",
+    "test": "jasmine"
+  }
+}
