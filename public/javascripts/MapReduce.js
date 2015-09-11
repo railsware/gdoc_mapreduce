@@ -55,35 +55,6 @@ function leftjoin(keysLeft, keysRight, valuesRight, defaultValues){
   })
 }
 
-
-// turn the array 90 degres. x*y array into y*x
-function transpose(array){
-  if ( array === undefined ) {return undefined};
-
-  var tmp=[];
-  if ( array[0] === undefined || array[0].forEach === undefined ) {array=[array]}
-  var ny=array[0] && array[0].length;
-  var nx=array.length;
-
-  tmp.length=ny;
-  
-  for(var y=0; y<ny; y++) {
-    var line=tmp[y]=[];
-    line.length=nx;
-    for(var x=0; x<nx; x++) {
-      tmp[y][x]=array[x][y];
-    }
-  }
-  
-  // copy the tmp back
-  array.length=tmp.length;
-  for(var y=0; y<ny; y++) {
-    array[y]=tmp[y];
-  }
-
-  return array;
-}
-
 // create all the vertical functions for all the horizontal ones
 // for that matter the following happens:
 // - array is tranposed;
