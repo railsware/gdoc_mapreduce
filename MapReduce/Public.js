@@ -41,7 +41,18 @@ function mr() {
     }
 }
 
-
+/**
+ * Matches two tables by keys and produces valuesRight.
+ * Works similarly to SQL LEFT JOIN.
+ *
+ * @param {Array} keysLeft
+ * @param {Array} keysRight
+ * @param {Array} valuesRight
+ * @param {Array} defaultValues Values to return if the right value is not present.
+ * @returns {Array}
+ *
+ * @customfunction
+ */
 function leftjoin(keysLeft, keysRight, valuesRight, defaultValues) {
     var _ = {$: array_(arguments)};
 
@@ -60,6 +71,18 @@ function leftjoin(keysLeft, keysRight, valuesRight, defaultValues) {
     return keysLeft.map(function (value, index) {
         return (value_map[value] == undefined) ? (defaultValues && defaultValues[index]) : valuesRight[value_map[value]]
     })
+}
+
+/**
+ * Returns the same array, but without blank values at the end.
+ *
+ * @param {Array} array
+ * @returns {Array}
+ *
+ * @customfunction
+ */
+function array_trim(array) {
+    return array.trim();
 }
 
 // create all the vertical functions for all the horizontal ones
